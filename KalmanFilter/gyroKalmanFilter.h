@@ -30,7 +30,7 @@ struct GyroKalman {
     float Q_angle, Q_gyro;
     float R_angle;
 };
-
+s;
 typedef union accel_t_gyro_union {
     struct {
         uint8_t x_accel_h, x_accel_l;
