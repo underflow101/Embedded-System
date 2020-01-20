@@ -28,6 +28,9 @@ int initIndex = 0;
 int initSize = 5;
 int xCal = 0, yCal = 0, zCal = 1800;
 
+// For return
+int _x = 0, _y = 0, _z = 0;
+
 struct GyroKalman angX;
 struct GyroKalman angY;
 struct GyroKalman angZ;
@@ -127,14 +130,29 @@ void gyroExecute() {
         }
         Serial.print(F("Angle x, y, z: "));
         Serial.print(gx1, DEC);
+        _x = gx1;
         Serial.print(F(", "));
         Serial.print(gy1, DEC);
+        _y = gy1;
         Serial.print(F(", "));
         Serial.print(gz1, DEC);
+        _z = gz1;
         Serial.println(F(""));
     }
     prevSensoredTime = curSensoredTime;
     newDelay(200);
+}
+
+int getXcoord() {
+    return _x;
+}
+
+int getYcoord() {
+    return _y;
+}
+
+int getZcoord() {
+    return _z;
 }
 
 /***********************

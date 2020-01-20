@@ -58,6 +58,9 @@ float angleInDegrees(int lo, int hi, int measured);
 void initGyroKalman(struct GyroKalman *kalman, const float Q_angle, const float Q_gyro, const float R_angle);
 void predict(struct GyroKalman *kalman, float dotAngle, float dt);
 float update(struct GyroKalman *kalman, float angle_m);
+int getXcoord();
+int getYcoord();
+int getZcoord();
 void newDelay(int x);
 
 
