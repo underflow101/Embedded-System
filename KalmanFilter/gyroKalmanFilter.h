@@ -48,9 +48,6 @@ typedef union accel_t_gyro_union {
     } value;
 };
 
-// Peripheral
-#define SWAP(x, y, tmp) tmp = x; x = y; y = tmp;
-
 // Function Prototype
 void gyroInit();
 void gyroExecute();

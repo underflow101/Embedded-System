@@ -77,13 +77,14 @@ void gyroExecute() {
         Serial.println(error, DEC);
     }
 
-    SWAP(accel_t_gyro.reg.x_accel_h, accel_t_gyro.reg.x_accel_l, tmp);
-    SWAP(accel_t_gyro.reg.y_accel_h, accel_t_gyro.reg.y_accel_l, tmp);
-    SWAP(accel_t_gyro.reg.z_accel_h, accel_t_gyro.reg.z_accel_l, tmp);
-    SWAP(accel_t_gyro.reg.t_h, accel_t_gyro.reg.t_l, tmp);
-    SWAP(accel_t_gyro.reg.x_gyro_h, accel_t_gyro.reg.x_gyro_l, tmp);
-    SWAP(accel_t_gyro.reg.y_gyro_h, accel_t_gyro.reg.y_gyro_l, tmp);
-    SWAP(accel_t_gyro.reg.z_gyro_h, accel_t_gyro.reg.z_gyro_l, tmp);
+    #define SWAP(x, y) tmp = x; x = y; y = tmp;
+    SWAP(accel_t_gyro.reg.x_accel_h, accel_t_gyro.reg.x_accel_l);
+    SWAP(accel_t_gyro.reg.y_accel_h, accel_t_gyro.reg.y_accel_l);
+    SWAP(accel_t_gyro.reg.z_accel_h, accel_t_gyro.reg.z_accel_l);
+    SWAP(accel_t_gyro.reg.t_h, accel_t_gyro.reg.t_l);
+    SWAP(accel_t_gyro.reg.x_gyro_h, accel_t_gyro.reg.x_gyro_l);
+    SWAP(accel_t_gyro.reg.y_gyro_h, accel_t_gyro.reg.y_gyro_l);
+    SWAP(accel_t_gyro.reg.z_gyro_h, accel_t_gyro.reg.z_gyro_l);
 
     if(prevSensoredTime > 0) {
         int gx1 = 0, gy1 = 0, gz1 = 0;
@@ -100,6 +101,8 @@ void gyroExecute() {
         predict(&angZ, gz2, loopTime);
 
         gx1 = update(&angX, accel_t_gyro.value.x_accel) / 10;
+        gy1 = update(&angY, accel_t_gyro.value.y_accel) / 10;
+        gz1 = update(&angZ, accel_t_gyro.value.z_accel) / 10;
 
         if(initIndex < initSize) {
             xInit[initIndex] = gx1;
