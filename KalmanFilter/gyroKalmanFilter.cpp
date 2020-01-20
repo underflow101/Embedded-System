@@ -2,13 +2,40 @@
 
 #include <math.h>
 #include <Wire.h>
+#include <Arduino.h>
 #include "gyroKalmanFilter.h"
+
+static const float R_angle = 0.3;
+static const float Q_angle = 0.01;
+static const float Q_gyro = 0.04;
+
+// Value limitation of accelerometer (may vary)
+const int lowX = -2150;
+const int highX = 2210;
+const int lowY = -2150;
+const int highY = 2210;
+const int lowZ = -2150;
+const int highZ = 2550;
+
+// Time
+unsigned long prevSensoredTime = 0;
+unsigned long curSensoredTime = 0;
+
+int xInit[5] = { 0, 0, 0, 0, 0 };
+int yInit[5] = { 0, 0, 0, 0, 0 };
+int zInit[5] = { 0, 0, 0, 0, 0 };
+int initIndex = 0;
+int initSize = 5;
+int xCal = 0, yCal = 0, zCal = 1800;
 
 struct GyroKalman angX;
 struct GyroKalman angY;
 struct GyroKalman angZ;
 
 void gyroInit() {
+    Serial.begin(SERIAL_SPEED);
+    Wire.begin();
+    
     int error;
     uint8_t c;
 
@@ -32,7 +59,7 @@ void gyroInit() {
     Serial.println(error, DEC);
 
     // Clear Sleep Bit to start the MPU6050 sensor
-    MPU6050_write_reg(MPU_PWR_MGMT_1, 0);
+    MPU6050_write_reg(MPU6050_PWR_MGMT_1, 0);
 }
 
 void gyroExecute() {
@@ -44,7 +71,7 @@ void gyroExecute() {
     curSensoredTime = millis();
 
     // Read raw values (14 bit) of acceleration/gyro/temperature (Not Stable)
-    error = MPU6050_read(MPU_6050_ACCEL_XOUT_H, (uint8_t*)&accel_t_gyro, sizeof(accel_t_gyro));
+    error = MPU6050_read(MPU6050_ACCEL_XOUT_H, (uint8_t*)&accel_t_gyro, sizeof(accel_t_gyro));
     if(error != 0) {
         Serial.print(F("Read acceleration, temperature, gyro... error = "));
         Serial.println(error, DEC);

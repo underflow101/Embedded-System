@@ -31,22 +31,6 @@ struct GyroKalman {
     float R_angle;
 };
 
-static const float R_angle = 0.3;
-static const float Q_angle = 0.01;
-static const float Q_gyro = 0.04;
-
-// Value limitation of accelerometer (may vary)
-const int lowX = -2150;
-const int highX = 2210;
-const int lowY = -2150;
-const int highY = 2210;
-const int lowZ = -2150;
-const int highZ = 2550;
-
-// Time
-unsigned long prevSensoredTime = 0;
-unsigned long curSensoredTime = 0;
-
 typedef union accel_t_gyro_union {
     struct {
         uint8_t x_accel_h, x_accel_l;
@@ -64,15 +48,20 @@ typedef union accel_t_gyro_union {
     } value;
 };
 
-int xInit[5] = { 0, 0, 0, 0, 0 };
-int yInit[5] = { 0, 0, 0, 0, 0 };
-int zInit[5] = { 0, 0, 0, 0, 0 };
-int initIndex = 0;
-int initSize = 5;
-int xCal = 0, yCal = 0, zCal = 1800;
-
 // Peripheral
 #define SWAP(x, y, tmp) tmp = x; x = y; y = tmp;
+
+// Function Prototype
+void gyroInit();
+void gyroExecute();
+int MPU6050_read(int start, uint8_t *buffer, int size);
+int MPU6050_write(int start, const uint8_t *pData, int size);
+int MPU6050_write_reg(int reg, uint8_t data);
+float angleInDegrees(int lo, int hi, int measured);
+void initGyroKalman(struct GyroKalman *kalman, const float Q_angle, const float Q_gyro, const float R_angle);
+void predict(struct GyroKalman *kalman, float dotAngle, float dt);
+float update(struct GyroKalman *kalman, float angle_m);
+void newDelay(int x);
 
 
 #endif /*_GYROKALMANFILTER_H_*/
