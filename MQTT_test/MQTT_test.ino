@@ -5,10 +5,13 @@
 #include <WiFiServer.h>
 #include <PubSubClient.h>
 
-#define WFSSID      "WiFiSSID"
-#define PASSWORD    "WiFiPASSWORD"
-#define mqtt_server "test.mosquitto.org"
-#define mqtt_topic  "TEST/test"
+#define WFSSID      "luple_2.4g"
+#define PASSWORD    "luple123"
+//#define mqtt_server "mosquitto.org"
+#define mqtt_port   1883
+#define mqtt_topic  "test/test"
+
+IPAddress mqtt_server(192, 168, 0, 18);
 
 const char* mqtt_message = "Hey, I'm from tistory!";
 const char* j = 0;
@@ -30,6 +33,7 @@ void setup() {
         delay(1000);
     }
 
+    WiFi.mode(WIFI_STA);
     WiFi.begin(WFSSID, PASSWORD);
     Serial.print("Connecting to WiFi");
     while(WiFi.status() != WL_CONNECTED) {
@@ -42,7 +46,7 @@ void setup() {
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
 
-    client.setServer(mqtt_server, 1883);
+    client.setServer(mqtt_server, mqtt_port);
     
     client.setCallback(callback);
 }
@@ -91,7 +95,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
 void reconnect() {
     while(!client.connected()) {
         Serial.println("Attempting MQTT connection...");
-        if(client.connect("ESP32Client")) {
+        String clientId = "ESP32Client-";
+        clientId += String(random(0xffff), HEX);
+        if(client.connect(clientId.c_str(),"ESP32client", "Connect")) {
             Serial.println("connected");
             client.publish(mqtt_topic, "Hello, MQTT World! I'm Bear! :)");
             delay(2000);
