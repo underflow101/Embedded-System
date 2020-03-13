@@ -73,7 +73,7 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
-  //reconnect();
+  reconnect();
 
   client.connect("esp32client", "TEST!!!!!!", "HEY");
 }
@@ -85,13 +85,13 @@ void publishSerialData(char *serialData){
   client.publish(MQTT_SERIAL_PUBLISH_CH, serialData);
 }
 void loop() {
-//   client.loop();
-//   if (Serial.available() > 0) {
-//     char mun[501];
-//     memset(mun,0, 501);
-//     Serial.readBytesUntil( '\n',mun,500);
-//     publishSerialData(mun);
-//   }
+   client.loop();
+   if (Serial.available() > 0) {
+     char mun[501];
+     memset(mun,0, 501);
+     Serial.readBytesUntil( '\n',mun,500);
+     publishSerialData(mun);
+   }
 
     client.publish("test/test", "Hello, world");
 }
