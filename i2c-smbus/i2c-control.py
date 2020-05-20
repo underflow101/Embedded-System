@@ -14,7 +14,7 @@ ONE_TIME_HIGH_RES_MODE_2 = 0x21
 
 fd = os.open('/dev/i2c-2', os.O_RDWR)
 fcntl.ioctl(fd, I2C_SLAVE, BH1750)
-r = os.write(fd, bytes([CONTINUOUS_HIGH_RES_MODE_2]))
+# r = os.write(fd, bytes([CONTINUOUS_HIGH_RES_MODE_2]))
 
 try:
     while True:
