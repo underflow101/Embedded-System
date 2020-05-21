@@ -5,7 +5,7 @@ import fcntl
 import time
 
 I2C_SLAVE = 0x703
-BH1750 = 0x39
+TSL2561 = 0x39
 
 CONTINUOUS_HIGH_RES_MODE_1 = 0x26
 CONTINUOUS_HIGH_RES_MODE_2 = 0x27
@@ -13,7 +13,7 @@ ONE_TIME_HIGH_RES_MODE_1 = 0x36
 ONE_TIME_HIGH_RES_MODE_2 = 0x37
 
 fd = os.open('/dev/i2c-1', os.O_RDWR)
-fcntl.ioctl(fd, I2C_SLAVE, BH1750)
+fcntl.ioctl(fd, I2C_SLAVE, TSL2561)
 r = os.write(fd, bytes([CONTINUOUS_HIGH_RES_MODE_2]))
 
 try:
